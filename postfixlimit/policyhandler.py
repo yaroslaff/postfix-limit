@@ -1,0 +1,52 @@
+import socketserver
+import logging
+
+class PolicyHandler(socketserver.StreamRequestHandler):
+    logger: logging.Logger = logging.getLogger("postfixlimit")
+
+    @classmethod
+    def configure_logger(cls, log_file=None, verbosity=1):
+        level = {0: logging.WARNING, 1: logging.INFO, 2: logging.DEBUG}.get(verbosity, logging.INFO)
+        logger = cls.logger
+        logger.setLevel(level)
+
+        # Clear existing handlers added during reconfiguration
+        for h in list(logger.handlers):
+            logger.removeHandler(h)
+
+        if log_file:
+            handler = logging.FileHandler(log_file)
+        else:
+            handler = logging.StreamHandler()
+
+        handler.setLevel(level)
+        handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s"))
+        logger.addHandler(handler)
+
+        cls.logger = logger
+        cls.verbosity = verbosity
+
+    def handle(self):
+        attrs = {}
+
+        for line in self.rfile:
+            line = line.decode().strip()
+            if not line:
+                if self.verbosity >= 2:
+                    self.logger.info(f"all attrs: {attrs}")
+                action = self.check_policy(attrs)
+                self.logger.info(f"MESSAGE {attrs.get('sender')} > {attrs.get('recipient')}" \
+                                 f" (SASL:{attrs.get('sasl_username')!r} client:{attrs.get('client_address')!r} sz:{attrs.get('size')}): {action}")
+                self.wfile.write(f"action={action}\n\n".encode())
+                attrs = {}
+            elif "=" in line:
+                k, v = line.split("=", 1)
+                attrs[k] = v
+                
+    def check_policy(self, attrs):
+        sender = attrs.get("sender", "")
+        size = int(attrs.get("size", 0))
+
+        self.logger.debug(f"check_policy: sender={sender!r}, size={size}")
+        return "DUNNO"
+

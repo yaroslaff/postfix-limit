@@ -1,0 +1,86 @@
+[build-system]
+requires = ["hatchling>=1.27.0", "wheel"]
+
+build-backend = "hatchling.build"
+
+[project]
+name="postfix-limit"
+# license = "MIT"
+license = { file = "LICENSE" }
+dynamic = [ "version" ]
+keywords = [ "postfix", "policy", "limit", "ratelimit", "rate", "spam", "antispam", "anti-spam", "sasl", "ip", "sender" ]
+
+dependencies = [
+]
+authors = [
+  { name="Yaroslav Polyakov", email="yaroslaff@gmail.com" },
+]
+description = "Simple postfix policy service (check_policy_service) for per-user limit number of sent messages (by IP, SASL username or sender address)"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",    
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Security :: Cryptography"
+]
+
+[project.urls]
+Homepage = "https://github.com/yaroslaff/postfix-limit"
+Issues = "https://github.com/yaroslaff/postfix-limit/issues"
+
+
+[project.scripts]
+postfixlimit = "postfixlimit.cli.postfixlimit:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["postfixlimit"]
+
+[tool.hatch.version]
+path = 'postfixlimit/__about__.py'
+
+[tool.hatch.metadata]
+# license-files = ["LICENSE"]
+
+
+
+[tool.hatch.envs]
+py38 = { python = "3.8" }
+py39 = { python = "3.9" }
+py310 = { python = "3.10" }
+py311 = { python = "3.11" }
+py312 = { python = "3.12" }
+
+[tool.hatch.envs.default]
+dependencies = [
+  "coverage[toml]>=6.5",
+  "pytest",
+]
+
+
+[tool.hatch.envs.default.scripts]
+test = "pytest {args:tests}"
+test-cov = "coverage run -m pytest {args:tests}"
+cov-report = [
+  "coverage report -m",
+]
+cov = [
+  "test-cov",
+  "cov-report",
+]
+
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
+
+
+
