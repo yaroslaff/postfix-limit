@@ -52,7 +52,6 @@ class PolicyHandler(socketserver.StreamRequestHandler):
             line = line.decode().strip()
             if not line:
                 self.singleton.counter += 1
-                print("counter", self.singleton.counter)
 
                 if self.verbosity >= 2:
                     self.logger.info(f"all attrs: {attrs}")
