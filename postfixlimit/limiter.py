@@ -35,9 +35,8 @@ class Limiter:
         _ = parse(self.default_limit)
 
     def check(self, key: str):
-        self.logger.info(f".. check {key}")
         if key not in self.counters:
-            self.logger.info(f"make new limiter for key {key}")
+            self.logger.info(f"Make a new limiter for key {key}")
             self.counters[key] = parse(self.default_limit)
 
         cnt = self.counters[key]
