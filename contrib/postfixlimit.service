@@ -1,0 +1,21 @@
+[Unit]
+Description=Postfix Policy Service
+After=network.target
+
+[Service]
+Type=simple
+DynamicUser=true
+ReadOnlyPaths=/etc/postfix-policy
+
+ExecStart=/usr/local/bin/postfixlimit
+
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

@@ -57,7 +57,8 @@ def main():
         return
     
     # server.allow_reuse_address = True
-    print(f"Postfix policy server listening on {config.address}:{config.port} (verbosity={args.verbosity}, log_file={config.log_file})")
+    print(f"Postfix policy server listening on {config.address}:{config.port} (verbosity={args.verbosity}, log_file={config.log_file})",
+            flush=True)
     try:
         server.serve_forever()
     except KeyboardInterrupt:
