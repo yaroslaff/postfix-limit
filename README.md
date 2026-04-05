@@ -1,23 +1,20 @@
 # postfix-limit
 Simple mail limiter for postfix (check_policy_service)
 
+## Installation
+### Install package
 ~~~
 PIPX_HOME=/opt/pipx PIPX_BIN_DIR=/usr/local/bin pipx install https://github.com/yaroslaff/postfixlimit
+~~~
 
-# and same for clean uninstall
+~~~
+# and same for clean uninstall (if you will ever need)
 PIPX_HOME=/opt/pipx PIPX_BIN_DIR=/usr/local/bin pipx uninstall postfixlimit
 ~~~
 
-## Integration with postfix
-add this to `smtpd_recipient_restrictions` in `main.cf`:
-~~~
-smtpd_recipient_restrictions = 
-        check_policy_service inet:127.0.0.1:4455
-~~~
-
-
 ## Systemd unit file
-Copy [contrib/postfixlimit.service](contrib/postfixlimit.service) as `/etc/systemd/system/postfixlimit.service`
+Copy [contrib/postfixlimit.service](contrib/postfixlimit.service) as `/etc/systemd/system/postfixlimit.service`.
+Do `systemctl daemon-reload` after this and then: `systemctl start postfixlimit`
 
 ## Example config file
 Example config file is in [contrib/postfixlimit.conf](contrib/postfixlimit.conf), save it as `/etc/postfixlimit.conf`
@@ -47,6 +44,13 @@ aaa@example.com = 100 / day
 
 ## Limits configuration
 Postfixlimit uses [limits](https://github.com/alisaifee/limits) package for this. Limits could be configured according to it's [documentation](https://limits.readthedocs.io/en/stable/quickstart.html#rate-limit-string-notation). Format is: `[count] [per|/] [n (optional)] [second|minute|hour|day|month|year]`.
+
+## Integration with postfix
+add this to `smtpd_recipient_restrictions` in `main.cf`:
+~~~
+smtpd_recipient_restrictions = 
+        check_policy_service inet:127.0.0.1:4455
+~~~
 
 ## Protocol specification
 https://www.postfix.org/SMTPD_POLICY_README.html
