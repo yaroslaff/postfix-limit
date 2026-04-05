@@ -8,6 +8,11 @@ DynamicUser=true
 ReadOnlyPaths=/etc/postfix-policy
 
 ExecStart=/usr/local/bin/postfixlimit
+# ExecStart=/root/.local/bin/postfixlimit
+
+StateDirectory=postfixlimit
+StateDirectoryMode=0755
+LogsDirectory=postfixlimit
 
 NoNewPrivileges=true
 PrivateTmp=true

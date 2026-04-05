@@ -2,7 +2,7 @@
 Simple mail limiter for postfix (check_policy_service)
 
 ~~~
-PIPX_HOME=/opt/pipx PIPX_BIN_DIR=/usr/local/bin pipx install
+PIPX_HOME=/opt/pipx PIPX_BIN_DIR=/usr/local/bin pipx install https://github.com/yaroslaff/postfixlimit
 
 # and same for clean uninstall
 PIPX_HOME=/opt/pipx PIPX_BIN_DIR=/usr/local/bin pipx uninstall postfixlimit
@@ -20,6 +20,27 @@ smtpd_recipient_restrictions =
 
 
 ## Example config file
+Example config file is in `contrib/postfixlimit.conf`, save it as `/etc/postfixlimit.conf`
 ~~~
+# Main server options
+[server]
+address = 127.0.0.1
+port = 4455
 
+# field is one of sender/sasl_username/client_address
+field = sender
+default_limit = 5/day
+action = DEFER
+action_text = Limit ({limit}) exceeded for {field}={key}
+
+# storage: this or memory:// (default) for memory storage
+storage = redis://localhost:6379/
+
+dump_period = 60
+dump_file = /var/lib/postfixlimit/limits.txt
+log_file = /var/log/postfixlimit/postfixlimit.log
+
+# Specific limits
+[limits]
+aaa@bbb.com = 1 / day
 ~~~

@@ -18,4 +18,3 @@ class Singleton:
     
     def init1(self):
         self.last_dump = time.time()
-        self.counter = 0

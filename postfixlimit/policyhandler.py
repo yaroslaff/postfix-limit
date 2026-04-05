@@ -51,11 +51,14 @@ class PolicyHandler(socketserver.StreamRequestHandler):
         for line in self.rfile:
             line = line.decode().strip()
             if not line:
-                self.singleton.counter += 1
-
                 if self.verbosity >= 2:
                     self.logger.info(f"all attrs: {attrs}")
-                action = self.check_policy(attrs)
+                
+                
+                if self.config.transparent:
+                    action = "DUNNO"
+                else:
+                    action = self.check_policy(attrs)
                 self.logger.info(f"MESSAGE {attrs.get('sender')} > {attrs.get('recipient')}" \
                                  f" (SASL:{attrs.get('sasl_username')!r} client:{attrs.get('client_address')!r} sz:{attrs.get('size')}): {action}")
                 self.wfile.write(f"action={action}\n\n".encode())

@@ -1,4 +1,7 @@
+import logging
+import sys
 import time
+import datetime
 
 from limits import storage, limits, strategies, parse
 from .config import Config
@@ -14,6 +17,7 @@ class Limiter:
         self.limits = self.config.limits
         self.counters = {}
         
+        self.logger: logging.Logger = logging.getLogger("postfixlimit")
 
         self.storage = storage.storage_from_string(self.config.storage)
 
@@ -31,8 +35,9 @@ class Limiter:
         _ = parse(self.default_limit)
 
     def check(self, key: str):
+        self.logger.info(f".. check {key}")
         if key not in self.counters:
-            print("make new limiter for key", key)
+            self.logger.info(f"make new limiter for key {key}")
             self.counters[key] = parse(self.default_limit)
 
         cnt = self.counters[key]
@@ -42,14 +47,22 @@ class Limiter:
             return True
         else:
             msg = self.config.action_text.format(limit=str(cnt), field=self.field, key=key)
+            self.logger.warning(f"Limit exceeded for {key}: {msg}")
             raise LimitExceeded(action=self.config.action, 
                                 message=msg)
 
     def dump(self):
-        print("Limits:")
-        for key, limiter in self.counters.items():
-            window = self.strategy.get_window_stats(limiter, NS, key)
-            print(f"  {key}: {limiter} remaining: {window.remaining}")
+        # dump to self.config.dump_file if configured, otherwise print to stdout
+
+        out = open(self.config.dump_file, 'w') if self.config.dump_file else sys.stdout
+        try:
+            print(f"Limits ({datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}):", file=out)    
+            for key, limiter in self.counters.items():
+                window = self.strategy.get_window_stats(limiter, NS, key)            
+                print(f"  {key}: {limiter} remaining: {window.remaining}", file=out)
+        finally:            
+            if self.config.dump_file:
+                out.close()
     
     def reset(self, sender: str):
         print("Resetting counter for", sender)

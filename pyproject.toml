@@ -40,6 +40,7 @@ Issues = "https://github.com/yaroslaff/postfixlimit/issues"
 
 [project.scripts]
 postfixlimit = "postfixlimit.cli.postfixlimit:main"
+postfixlimit-test = "postfixlimit.cli.postfixlimit_test:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["postfixlimit"]
