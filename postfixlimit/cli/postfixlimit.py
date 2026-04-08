@@ -17,7 +17,7 @@ def get_args():
                         help=f"Read this config (def: {def_config})")
     parser.add_argument("-v", "--verbosity", type=int, choices=[0, 1, 2], default=1,
                         help="Verbosity level: 0=warning, 1=info, 2=debug+all attrs (default 1)")
-    parser.add_argument("--reset", type=str, metavar="KEY", help="Reset counters for this key (e.g., email address) and exit")
+    parser.add_argument("--reset", type=str, metavar="KEY", help="Reset counters for this key (e.g., email address) or ALL and exit")
     parser.add_argument("--option", "-o", nargs='*', type=str, metavar="KEY=VAL", help="Override config option (e.g., 'dump_file=') for this run")
 
     return parser.parse_args()

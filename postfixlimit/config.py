@@ -18,7 +18,7 @@ class Config:
     def validate_config(self):
         try:
             assert self.action in ['DEFER', 'REJECT'], "Action must be either DEFER or REJECT"
-            assert self.strategy in ['fixed-window'], "Currently only fixed-window strategy is supported"
+            assert self.strategy in ['fixed-window', 'sliding-window', 'moving-window'], "Currently only fixed-window, sliding-window, and moving-window strategies are supported"
             assert self.field in ['sender', 'client_address', 'sasl_username'], "Field must be one of sender, client_address, sasl_username"
         except AssertionError as e:
             print(f"Configuration error: {e}")    

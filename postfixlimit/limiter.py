@@ -23,6 +23,10 @@ class Limiter:
 
         if self.config.strategy == 'fixed-window':
             self.strategy = strategies.FixedWindowRateLimiter(self.storage)
+        elif self.config.strategy == 'sliding-window':
+            self.strategy = strategies.SlidingWindowCounterRateLimiter(self.storage)
+        elif self.config.strategy == 'moving-window':
+            self.strategy = strategies.MovingWindowRateLimiter(self.storage)
         else:            
             raise ValueError(f"Unsupported strategy type: {self.config.strategy}")
 

@@ -38,7 +38,7 @@ class PolicyHandler(socketserver.StreamRequestHandler):
             handler = logging.StreamHandler()
 
         handler.setLevel(level)
-        handler.setFormatter(logging.Formatter("%(asctime)s %(message)s"))
+        handler.setFormatter(logging.Formatter("%(asctime)s %(message)s", datefmt="%Y-%m-%d %H:%M:%S"))
         logger.addHandler(handler)
 
         cls.logger = logger
