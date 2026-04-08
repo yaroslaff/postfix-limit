@@ -102,7 +102,7 @@ smtpd_recipient_restrictions =
 
 ## Viewing Counter State
 
-Every `dump_period` seconds, postfixlimit writes the current counter values to `dump_file`:
+Every `dump_period` seconds, postfix-limit writes the current counter values to `dump_file`. The file is updated after a message is processed, if at least `dump_period` seconds have elapsed since the last write — it is not rewritten unless new mail arrives.
 
 ```shell
 root@micromail:~# cat /var/lib/postfixlimit/limits.txt
