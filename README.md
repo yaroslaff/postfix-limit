@@ -74,6 +74,9 @@ storage = memory://
 # Rate-limiting strategy: fixed-window / sliding-window / moving-window
 strategy = fixed-window
 
+# all messages approved in transparent mode
+transparent = false
+
 dump_period = 60
 dump_file = /var/lib/postfixlimit/limits.txt
 log_file = /var/log/postfixlimit/postfixlimit.log
